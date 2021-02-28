@@ -1,13 +1,13 @@
 package com.mercadolibre.challenge.quasar.domain;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.Value;
 
-
-@Builder
-@Getter
+@Value
 public class Position {
-    private final double x;
-    private final double y;
+    double x;
+    double y;
+
+    public double[] toArray(){
+        return new double[]{x,y};
+    }
 }

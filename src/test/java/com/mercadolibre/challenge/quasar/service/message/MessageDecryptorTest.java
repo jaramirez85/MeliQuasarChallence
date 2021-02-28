@@ -7,12 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.mercadolibre.challenge.quasar.service.message.MessageDecryptor.*;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MessageDecryptorTest {
+
+    private final MessageDecryptor messageDecryptor = new MessageDecryptorImpl();
 
     @Test
     void givenValidMessages_Then_ReturnsDecryptedMessage() {
@@ -21,7 +22,7 @@ class MessageDecryptorTest {
         messages.add(createMessage("", "es",   "",   "", "secreto"));
         messages.add(createMessage("este", "",   "un",   "", ""));
 
-        String messageDecrypted = decript(messages);
+        String messageDecrypted = decrypt(messages);
         assertThat(messageDecrypted).isEqualTo("este es un mensaje secreto");
     }
 
@@ -32,7 +33,7 @@ class MessageDecryptorTest {
         messages.add(createMessage("", "es",   "",   "", "  secreto  "));
         messages.add(createMessage("    ", "",   "un",   "", "  "));
 
-        String messageDecrypted = decript(messages);
+        String messageDecrypted = decrypt(messages);
         assertThat(messageDecrypted).isEqualTo("este es un mensaje secreto");
     }
 
@@ -43,7 +44,7 @@ class MessageDecryptorTest {
         messages.add(createMessage("un",   "secreto"));
         messages.add(createMessage("", "es",   " ",   "", ""));
 
-        String messageDecrypted = decript(messages);
+        String messageDecrypted = decrypt(messages);
         assertThat(messageDecrypted).isEqualTo("este es un secreto");
     }
 
@@ -55,7 +56,7 @@ class MessageDecryptorTest {
         messages.add(createMessage("Hi!",  "Meli"));
         messages.add(createMessage("",  "Meli"));
 
-        assertThatThrownBy(() -> decript(messages))
+        assertThatThrownBy(() -> decrypt(messages))
                 .isInstanceOf(IndeterminateMessageException.class)
                 .hasMessage("Different Strings in the same column(0) [hola - hi!]");
     }
@@ -65,7 +66,7 @@ class MessageDecryptorTest {
         List<List<String>> messages = new ArrayList<>(1);
         messages.add(createMessage("hola", "Meli"));
 
-        assertThatThrownBy(() -> decript(messages))
+        assertThatThrownBy(() -> decrypt(messages))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -76,7 +77,7 @@ class MessageDecryptorTest {
         messages.add(createMessage(""));
         messages.add(createMessage(" ", " "));
 
-        String messageDecrypted = decript(messages);
+        String messageDecrypted = decrypt(messages);
         assertThat(messageDecrypted).isEmpty();
     }
 
@@ -91,11 +92,15 @@ class MessageDecryptorTest {
         messages.add(messageS2);
         messages.add(messageS3);
 
-        String messageDecrypted = decript(messages);
+        String messageDecrypted = decrypt(messages);
         assertThat(messageDecrypted).isEmpty();
         assertThat(messageS1).hasSize(3);
         assertThat(messageS2).hasSize(1);
         assertThat(messageS3).hasSize(2);
+    }
+
+    private String decrypt(List<List<String>> messages) {
+        return messageDecryptor.decript(messages);
     }
 
     private static List<String> createMessage(String... messages){

@@ -4,11 +4,12 @@ import com.mercadolibre.challenge.quasar.service.location.exception.InvalidSizeE
 import com.mercadolibre.challenge.quasar.service.location.exception.NegativePositionsException;
 import org.junit.jupiter.api.Test;
 
-import static com.mercadolibre.challenge.quasar.service.location.Trilateration2DSolver.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class Trilateration2DSolverTest {
+
+    private final Trilateration2DSolver trilateration2DSolver = new Trilateration2DSolverImpl();
 
     public static final double[][] VALID_POSITIONS = new double[][]{
             new double[]{4, 8},
@@ -69,4 +70,7 @@ class Trilateration2DSolverTest {
                 .hasMessage("distances should be greater than zero");
     }
 
+    private double[] solve(double[][] positions, double[] distances) {
+        return trilateration2DSolver.solve(positions, distances);
+    }
 }

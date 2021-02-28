@@ -1,6 +1,8 @@
 package com.mercadolibre.challenge.quasar.service.message.exception;
 
-public class IndeterminateMessageException extends RuntimeException {
+import com.mercadolibre.challenge.quasar.service.exception.TopSecretRuntimeException;
+
+public class IndeterminateMessageException extends TopSecretRuntimeException {
 
     public IndeterminateMessageException(String message) {
         super(message);

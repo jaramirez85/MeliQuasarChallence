@@ -1,6 +1,8 @@
 package com.mercadolibre.challenge.quasar.service.location.exception;
 
-public class InvalidSizeException extends RuntimeException {
+import com.mercadolibre.challenge.quasar.service.exception.TopSecretRuntimeException;
+
+public class InvalidSizeException extends TopSecretRuntimeException {
 
     public InvalidSizeException(String message) {
         super(message);
