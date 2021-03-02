@@ -1,7 +1,6 @@
 package com.mercadolibre.challenge.quasar.controller;
 
 import com.mercadolibre.challenge.quasar.domain.TopSecretRequest;
-import com.mercadolibre.challenge.quasar.domain.TopSecretResponse;
 import com.mercadolibre.challenge.quasar.service.TopSecretService;
 import com.mercadolibre.challenge.quasar.service.exception.TopSecretException;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +25,14 @@ public class TopSecretController {
     }
 
     @PostMapping
-    public ResponseEntity<TopSecretResponse> topSecret(@RequestBody TopSecretRequest topSecretRequest) {
+    public ResponseEntity<Object> topSecret(@RequestBody TopSecretRequest topSecretRequest) {
         try{
             return new ResponseEntity<>(topSecretService.processData(topSecretRequest), HttpStatus.OK);
         }catch (TopSecretException ex){
-            return new ResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }catch (Exception ex){
             log.error("Internal Error", ex);
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -1,14 +1,12 @@
 package com.mercadolibre.challenge.quasar.service;
 
-import com.mercadolibre.challenge.quasar.domain.Position;
-import com.mercadolibre.challenge.quasar.domain.Satellite;
-import com.mercadolibre.challenge.quasar.domain.TopSecretRequest;
-import com.mercadolibre.challenge.quasar.domain.TopSecretResponse;
+import com.mercadolibre.challenge.quasar.domain.*;
 import com.mercadolibre.challenge.quasar.repository.SatelliteRepository;
 import com.mercadolibre.challenge.quasar.service.exception.TopSecretException;
 import com.mercadolibre.challenge.quasar.service.exception.TopSecretRuntimeException;
 import com.mercadolibre.challenge.quasar.service.exception.UnknownSatelliteException;
 import com.mercadolibre.challenge.quasar.service.location.Trilateration2DSolver;
+import com.mercadolibre.challenge.quasar.service.location.exception.NegativePositionsException;
 import com.mercadolibre.challenge.quasar.service.message.MessageDecryptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,6 +71,32 @@ public class TopSecretServiceImpl implements TopSecretService {
         }
 
     }
+
+    @Override
+    public void updateSatellite(UpdateSatelliteRequest updateSatelliteRequest) throws TopSecretException {
+
+        Optional<Satellite> satellite = satelliteRepository.findByName(updateSatelliteRequest.getName());
+        if(satellite.isEmpty())
+            throw new TopSecretException(String.format("Satellite \"%s\" not recognized. Only Kenobi, Skywalker and Sato are supported.", updateSatelliteRequest.getName()));
+
+        if(updateSatelliteRequest.getDistance() < 0)
+            throw new NegativePositionsException("distances should be greater than zero");
+
+        satelliteRepository.save(Satellite.builder()
+                .name(updateSatelliteRequest.getName())
+                .message(updateSatelliteRequest.getMessage() == null ? satellite.get().getMessage() : updateSatelliteRequest.getMessage())
+                .distance(updateSatelliteRequest.getDistance())
+                .position(satellite.get().getPosition())
+                .build());
+
+    }
+
+    @Override
+    public TopSecretResponse tryProcessData() throws TopSecretException {
+        List<Satellite> satellites = satelliteRepository.getAll();
+        return processData(new TopSecretRequest(satellites));
+    }
+
 
     private boolean existsIndeterminatePosition(double[] pointResolved) {
         return Double.isNaN(pointResolved[0]) || Double.isNaN(pointResolved[1]);
