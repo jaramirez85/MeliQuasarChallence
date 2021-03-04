@@ -75,7 +75,9 @@ Algunos ejemplos de Request:
 
      curl --location --request GET 'https://meliquasar.herokuapp.com/api/topsecret_split' \ --header 'Content-Type: application/json' \ --data-raw '{ "distance" : 5, "message" : ["este", "", "un", "", ""] }'    
     
-# Demo La aplicación ha sido desplegada en la plataforma **Heroku**.    
+# Demo 
+
+La aplicación ha sido desplegada en la plataforma **Heroku**.    
     
 ### Notas:    
     
