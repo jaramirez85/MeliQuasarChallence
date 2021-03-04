@@ -1,6 +1,9 @@
 
   
-# MeliQuasarChallence Prueba técnica para Mercado Libre: **"Operación Fuego de Quasar"**    
+# MeliQuasarChallence 
+
+Prueba técnica para Mercado Libre: **"Operación Fuego de Quasar"**    
+
  # Requerimientos del Proyecto    
     
  En este [PDF](docs/Operacion%20Fuego%20de%20Quasar.pdf) se detallan los requerimientos de la prueba técnica.    
